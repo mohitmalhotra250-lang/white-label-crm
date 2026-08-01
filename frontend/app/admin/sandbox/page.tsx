@@ -1,4 +1,4 @@
-import { useState } from 'react';
+"use client";
 import { useState, useEffect } from 'react';
 import AdminSidebar from '../../../components/admin-sidebar';
 import { apiGet, apiPost } from '../../../lib/api';

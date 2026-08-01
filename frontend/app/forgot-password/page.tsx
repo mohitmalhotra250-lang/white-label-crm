@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
 export default function ForgotPage() {

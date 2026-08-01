@@ -1,5 +1,6 @@
+"use client";
 import Link from 'next/link';
-import { Shield, Users, Brain, Plug, CreditCard, BarChart3, Activity, LogOut } from 'lucide-react';
+import { Shield, Users, Brain, Plug, CreditCard, BarChart3, Activity, LogOut, Zap, DollarSign } from 'lucide-react';
 
 const links = [
   { href: '/admin', label: 'Overview', icon: Shield },

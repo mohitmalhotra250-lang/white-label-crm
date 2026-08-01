@@ -1,3 +1,4 @@
+"use client";
 import AdminSidebar from '../../../components/admin-sidebar';
 import { apiGet } from '../../../lib/api';
 import { useEffect, useState } from 'react';

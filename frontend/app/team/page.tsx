@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar';
 import { apiGet } from '../../lib/api';

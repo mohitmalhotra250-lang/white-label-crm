@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/admin-sidebar';
 import { apiGet } from '../../../lib/api';
@@ -22,7 +23,7 @@ export default function AdminRevenue() {
 
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
           <div className="rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/10 p-6 shadow-xl"><h3 className="font-bold mb-3">Daily Usage (Minutes)</h3><ResponsiveContainer width="100%" height={250}><BarChart data={data?.charts?.dailyUsage || []}><CartesianGrid strokeDasharray="3 3" stroke="#334155" /><XAxis dataKey="date" stroke="#94a3b8" fontSize={12} /><YAxis stroke="#94a3b8" fontSize={12} /><Tooltip contentStyle={{ background: '#0f172a', borderColor: '#334155', color: '#f8fafc' }} /><Bar dataKey="minutes" fill="#22d3ee" radius={[8,8,0,0]} /></BarChart></ResponsiveContainer></div>
-          <div className="rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/10 p-6 shadow-xl"><h3 className="font-bold mb-3">Provider Cost Breakdown</h3><ResponsiveContainer width="100%" height={250}><PieChart><Pie data={((data?.providerCosts || [])).map((p: any) => ({ name: p.provider, value: p.total_cost_cents || 0 }))} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3}><Cell fill="#22d3ee" /><Cell fill="#f87171" /><Cell fill="#fbbf24" /><Cell fill="#a78bfa" /><Cell fill="#34d399" /></Pie><Tooltip contentStyle={{ background: '#0f172a', borderColor: '#334155', color: '#f8fafc' }} /><Legend /></PieChart></ResponsiveContainer></div>
+          <div className="rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/10 p-6 shadow-xl"><h3 className="font-bold mb-3">Provider Cost Breakdown</h3><ResponsiveContainer width="100%" height={250}><PieChart><Pie data={((data?.providerCosts || [])).map((p: any) => ({ name: p.provider, value: p.total_cost_cents || 0 }))} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3} dataKey="value"><Cell fill="#22d3ee" /><Cell fill="#f87171" /><Cell fill="#fbbf24" /><Cell fill="#a78bfa" /><Cell fill="#34d399" /></Pie><Tooltip contentStyle={{ background: '#0f172a', borderColor: '#334155', color: '#f8fafc' }} /><Legend /></PieChart></ResponsiveContainer></div>
         </div>
 
         <div className="rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/10 p-6 shadow-xl">

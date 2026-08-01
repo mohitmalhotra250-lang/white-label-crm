@@ -1,3 +1,4 @@
+"use client";
 export default function EmptyState({ title, desc }: { title: string; desc: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">

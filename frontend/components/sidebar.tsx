@@ -1,3 +1,4 @@
+"use client";
 import Link from 'next/link';
 import { LayoutDashboard, Users, Phone, History, Mic2, FileText, BarChart3, Settings, LogOut, Menu, X } from 'lucide-react';
 import { useState } from 'react';

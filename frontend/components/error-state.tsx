@@ -1,3 +1,4 @@
+"use client";
 export default function ErrorState({ msg }: { msg: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">

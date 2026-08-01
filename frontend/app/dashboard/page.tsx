@@ -1,3 +1,4 @@
+"use client";
 import ThemeToggle from "../../components/theme-toggle";
 import { useEffect, useState } from 'react';
 import { apiGet } from '../../lib/api';
