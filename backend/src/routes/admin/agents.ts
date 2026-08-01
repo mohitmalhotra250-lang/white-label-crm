@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { authenticate } from '../middleware/auth';
+import { requireSuperAdmin } from '../middleware/role';
+import { pool } from '../lib/db';
+const router = Router();
+router.use(authenticate, requireSuperAdmin);
+router.get('/', async (req, res) => { const r = await pool.query('SELECT * FROM agents ORDER BY created_at DESC'); res.json({ agents: r.rows }); });
+router.post('/', async (req, res) => { const r = await pool.query('INSERT INTO agents (client_id, name, prompt, voice, language, greeting, knowledge_base, faq, call_flow, transfer_rules, appointment_rules, end_call_rules, memory_config, temperature, variables, is_active) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,TRUE) RETURNING *', [req.body.clientId||null, req.body.name, req.body.prompt||'', req.body.voice, req.body.language||'en', req.body.greeting||'', req.body.knowledgeBase||'', JSON.stringify(req.body.faq||[]), JSON.stringify(req.body.callFlow||{}), JSON.stringify(req.body.transferRules||{}), JSON.stringify(req.body.appointmentRules||{}), JSON.stringify(req.body.endCallRules||{}), JSON.stringify(req.body.memoryConfig||{}), req.body.temperature||0.7, JSON.stringify(req.body.variables||{}), ]); res.status(201).json({ agent: r.rows[0] }); });
+router.put('/:id', async (req, res) => { await pool.query('UPDATE agents SET name=$1, prompt=$2, voice=$3, language=$4, greeting=$5, knowledge_base=$6, faq=$7, call_flow=$8, transfer_rules=$9, appointment_rules=$10, end_call_rules=$11, memory_config=$12, temperature=$13, variables=$14, is_active=$15 WHERE id=$16', [req.body.name, req.body.prompt, req.body.voice, req.body.language, req.body.greeting, req.body.knowledgeBase, JSON.stringify(req.body.faq||[]), JSON.stringify(req.body.callFlow||{}), JSON.stringify(req.body.transferRules||{}), JSON.stringify(req.body.appointmentRules||{}), JSON.stringify(req.body.endCallRules||{}), JSON.stringify(req.body.memoryConfig||{}), req.body.temperature, JSON.stringify(req.body.variables||{}), req.body.isActive!==undefined?req.body.isActive:true, req.params.id]); res.json({ updated: true }); });
+router.delete('/:id', async (req, res) => { await pool.query('DELETE FROM agents WHERE id=$1', [req.params.id]); res.json({ deleted: true }); });
+export default router;

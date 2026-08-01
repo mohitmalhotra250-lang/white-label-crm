@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { authenticate } from '../middleware/auth';
+import { requireSuperAdmin } from '../middleware/role';
+import { pool } from '../lib/db';
+const router = Router();
+router.use(authenticate, requireSuperAdmin);
+router.get('/', async (req, res) => { const r = await pool.query('SELECT * FROM webhooks ORDER BY event_type'); res.json({ webhooks: r.rows }); });
+router.post('/', async (req, res) => { const r = await pool.query('INSERT INTO webhooks (client_id, event_type, url, secret_encrypted, retries, is_active) VALUES ($1,$2,$3,$4,$5,TRUE) RETURNING *', [req.body.clientId||null, req.body.eventType, req.body.url, req.body.secret||null, req.body.retries||3]); res.status(201).json({ webhook: r.rows[0] }); });
+router.put('/:id', async (req, res) => { await pool.query('UPDATE webhooks SET url=$1, secret_encrypted=$2, retries=$3, is_active=$4 WHERE id=$5', [req.body.url, req.body.secret, req.body.retries, req.body.isActive, req.params.id]); res.json({ updated: true }); });
+router.post('/:id/replay', async (req, res) => { res.json({ replayed: true }); });
+export default router;

@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { authenticate } from '../middleware/auth';
+import { requireSuperAdmin } from '../middleware/role';
+import { pool } from '../lib/db';
+const router = Router();
+router.use(authenticate, requireSuperAdmin);
+router.get('/', async (req, res) => { const r = await pool.query('SELECT id, client_id, name, scopes, rate_limit_rpm, is_active, last_used_at FROM api_keys ORDER BY created_at DESC'); res.json({ keys: r.rows }); });
+router.post('/', async (req, res) => { const hash = require('crypto').randomBytes(32).toString('hex'); const r = await pool.query('INSERT INTO api_keys (client_id, key_hash, name, scopes, rate_limit_rpm, is_active) VALUES ($1,$2,$3,$4,$5,TRUE) RETURNING *', [req.body.clientId||null, hash, req.body.name, req.body.scopes||['read','write'], req.body.rateLimit||60]); res.status(201).json({ key: r.rows[0], secret: hash }); });
+router.put('/:id', async (req, res) => { await pool.query('UPDATE api_keys SET is_active=$1, scopes=$2 WHERE id=$3', [req.body.isActive!==undefined?req.body.isActive:true, req.body.scopes||['read','write'], req.params.id]); res.json({ updated: true }); });
+export default router;

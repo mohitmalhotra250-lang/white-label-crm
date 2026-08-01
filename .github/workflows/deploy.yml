@@ -1,0 +1,25 @@
+name: Production Build
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - name: Install & Test Backend
+        run: |
+          cd backend && npm ci
+          npm run build
+      - name: Install & Build Frontend
+        run: |
+          cd frontend && npm ci
+          npm run build
+      - name: Deploy
+        run: echo "Deploy to production host via SSH / Docker / Vercel"

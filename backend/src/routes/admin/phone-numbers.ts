@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { authenticate } from '../middleware/auth';
+import { requireSuperAdmin } from '../middleware/role';
+import { pool } from '../lib/db';
+const router = Router();
+router.use(authenticate, requireSuperAdmin);
+router.get('/', async (req, res) => { const r = await pool.query('SELECT * FROM phone_numbers ORDER BY country, number'); res.json({ numbers: r.rows }); });
+router.post('/', async (req, res) => { const r = await pool.query('INSERT INTO phone_numbers (client_id, number, country, caller_id, verified, is_active, rotation_order) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *', [req.body.clientId||null, req.body.number, req.body.country||'IN', req.body.callerId||null, req.body.verified||false, true, req.body.rotationOrder||0]); res.status(201).json({ number: r.rows[0] }); });
+router.put('/:id', async (req, res) => { await pool.query('UPDATE phone_numbers SET client_id=$1, country=$2, caller_id=$3, verified=$4, is_active=$5 WHERE id=$6', [req.body.clientId||null, req.body.country, req.body.callerId, req.body.verified, req.body.isActive, req.params.id]); res.json({ updated: true }); });
+export default router;
